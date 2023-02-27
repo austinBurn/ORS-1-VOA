@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8">
+    <title>Object Submission Form</title>
+  </head>
+  <body>
+    <h1>Welcome to the ORS VOA 1 ?object? import system.</h1>
+    <form id="object-form" method="post">
+      <label for="object-name">Object Name:</label>
+      <input type="text" name="name" id="object-name">
+	  <br><br>
+      <button type="submit">Create object</button>
+	  <button type="submit">Create object +</button>
+	  <!-- allow user to specify o's a's and v's 
+		   + will make a popup asking other 2 available type
+		   a and v in the case of this form being for o's
+		   will auto gen a's not in the system.
+		   
+		   "unvalued"(a->o,v) and valued(v->o,a +- a->o,v if needed) attributes can be created.
+		   
+	  -->
+    </form>
+    <script>
+      const form = document.querySelector('#object-form');
+      form.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const name = document.querySelector('#object-name').value;
+        const description = document.querySelector('#object-description').value;
+        const response = await fetch('/o', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ name, description })
+        });
+        const result = await response.json();
+        console.log(result.message);
+      });
+    </script>
+  </body>
+</html>

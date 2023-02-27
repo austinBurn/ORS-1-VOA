@@ -23,8 +23,8 @@ var p = credentials.match(/password=(.*)/)[1];
 
 //log into arangoDB
 const voa_db = new arangojs.Database({
-	url: 'http://localhost:8529',
-	databaseName: 'ors_db', //rename this ?
+	url: 'http://localhost:330',
+	databaseName: 'ors_db1_voa', //rename this ?
 	auth: {
 		username: u,
 		password: p
@@ -44,21 +44,27 @@ fastify.post('/o', async (request, reply) => {
 	const collection = voa_db.collection('o');
 
 	console.log("new object:\n " + Object.entries(request.body));
-	console.log("checking for existing...")
+	console.log("checking for similar objects's... NOT REALLY");
 
-	try {
-		await collection.save({
-			"dateModified": new Date().getTime()
-		});
-		reply.status(201).send({
-			message: 'Object saved'
-		});
-	} catch (err) {
-		console.error(err);
-		reply.status(500).send({
-			message: 'Failed to save object'
-		});
-	}
+	//if it doesn't exist.
+
+  try {
+    const newDoc = await collection.save({
+      "dateCreated": new Date().getTime(),
+      "dateModified": new Date().getTime(),
+      "p": 0,
+      "n": 0,
+    });
+
+    reply.status(201).send({
+      message: 'Object saved with id ' + newDoc._id
+    });
+  } catch (err) {
+    console.error(err);
+    reply.status(500).send({
+      message: 'Failed to save object'
+    });
+  }
 });
 
 fastify.register(fastifyStatic, {
@@ -75,6 +81,14 @@ fastify.listen({
 	}
 	console.log(`Server listening on ${address}`);
 });
+
+/* ChatGPT has attempted to make these below, use w/ caustion.
+async function mklnk_a_hasName_v(  a_id, v_id)// - a link to the name of the attribute. Always in lower case letters. Multilink for synonym.
+async function mklnk_o_has_v(      o_id, ...v_id)// - (a) link(s) to an objects attribute values.
+async function mklnk_v_belongsTo_a(v_id, a_id)// - a link to the associated attribute.
+async function mklnk_v_belongsTo_o(v_id, o_id)// - a link to the associated object.
+async function mklnk_v_isType_o(   v_id, o_id)// - a link to the type of data. Will be used for processing later.
+/*
 
 function create_v(creationTime = new Date().getTime(),
 	v_belongsTo_o,
@@ -161,7 +175,72 @@ async function create_v(creationTime, belongsTo_o, belongsTo_a, v_isType_o, v) {
 }
 */
 
-function create_o(creationTime, attributes) {
+async function mklnk_a_hasName_v(a_id, v_id) {
+  const collection = voa_db.collection('a_hasName_v');
+  try {
+    await collection.save({
+      "_from": a_id,
+      "_to": v_id,
+    });
+    console.log(`Created a_hasName_v link between ${a_id} and ${v_id}`);
+  } catch (err) {
+    console.error(`Failed to create a_hasName_v link between ${a_id} and ${v_id}: ${err}`);
+  }
+}
+
+async function mklnk_o_has_v(o_id, ...v_ids) {
+  const collection = voa_db.collection('o_has_v');
+  try {
+    const edges = v_ids.map(v_id => ({ "_from": o_id, "_to": v_id }));
+    await collection.import(edges);
+    console.log(`Created o_has_v link(s) for ${o_id}`);
+  } catch (err) {
+    console.error(`Failed to create o_has_v link(s) for ${o_id}: ${err}`);
+  }
+}
+
+async function mklnk_v_belongsTo_a(v_id, a_id) {
+  const collection = voa_db.collection('v_belongsTo_a');
+  try {
+    await collection.save({
+      "_from": v_id,
+      "_to": a_id,
+    });
+    console.log(`Created v_belongsTo_a link between ${v_id} and ${a_id}`);
+  } catch (err) {
+    console.error(`Failed to create v_belongsTo_a link between ${v_id} and ${a_id}: ${err}`);
+  }
+}
+
+async function mklnk_v_belongsTo_o(v_id, o_id) {
+  const collection = voa_db.collection('v_belongsTo_o');
+  try {
+    await collection.save({
+      "_from": v_id,
+      "_to": o_id,
+    });
+    console.log(`Created v_belongsTo_o link between ${v_id} and ${o_id}`);
+  } catch (err) {
+    console.error(`Failed to create v_belongsTo_o link between ${v_id} and ${o_id}: ${err}`);
+  }
+}
+
+async function mklnk_v_isType_o(v_id, o_id) {
+  const collection = voa_db.collection('v_isType_o');
+  try {
+    await collection.save({
+      "_from": v_id,
+      "_to": o_id,
+    });
+    console.log(`Created v_isType_o link between ${v_id} and ${o_id}`);
+  } catch (err) {
+    console.error(`Failed to create v_isType_o link between ${v_id} and ${o_id}: ${err}`);
+  }
+}
+
+
+
+async function create_o(...attributes) {
 	
 	//check for similar objects in the db
 	
@@ -176,6 +255,32 @@ function create_o(creationTime, attributes) {
 	//create_a(av.name)
 	//create_v(creationTime,
 	//}
+	
+	
+	
+	const collection = voa_db.collection('o');
+
+	console.log("new object:\n " + Object.entries(request.body));
+	console.log("checking for similar objects's... NOT REALLY");
+
+	//if it doesn't exist.
+
+	try {
+		await collection.save({
+			"dateCreated": new Date().getTime(),
+			"dateModified": new Date().getTime(),
+			"p":0,
+			"n":0,
+		});
+		reply.status(201).send({
+			message: 'Object saved'
+		});
+	} catch (err) {
+		console.error(err);
+		reply.status(500).send({
+			message: 'Failed to save object'
+		});
+	}
 }
 
 function create_a(creationTime, attributeName, type = "o/stringtypeobj?") {

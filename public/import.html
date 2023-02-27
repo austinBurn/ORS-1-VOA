@@ -3,6 +3,7 @@
   <head>
     <meta charset="UTF-8">
     <title>Object Submission Form</title>
+	<script src="https://code.jquery.com/jquery-3.6.3.min.js"></script>
 	<style>
 	#import-form-title * {
 		display:inline;
@@ -28,13 +29,13 @@
 	<hr>
     <form id="import-form" method="post">
 	<div id="import-form-title">
-	<h1>Welcome to the "simple
-	<select id="import-type" name="collection-name" size="1">
+	<h1>Welcome to the simple
+	<select id="import-type" name="form-type" size="1" (change)="console.log('testing')">
 			<option value="o">object</option>
 			<option value="v">value</option>
 			<option value="a">attribute</option>
 	</select>
-	import system".</h1>
+	import system.</h1>
 	</div>
 	  <hr>
       <label for="object-name">Object Name:</label>
@@ -56,6 +57,10 @@
 	  -->
     </form>
     <script>
+	  const formChangeHandler = $('#import-type').change(function() { 
+		console.log("Change to \'" + $('#import-type').val() + "\' entry form requested..." ); 
+	  });
+
       const form = document.querySelector('#import-form');
       form.addEventListener('submit', async (e) => {
         e.preventDefault();

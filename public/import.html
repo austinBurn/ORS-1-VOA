@@ -7,6 +7,15 @@
 	#import-form-title * {
 		display:inline;
 	}
+	#import-type{
+		font-size: 1em;
+		font-weight: bold;
+		font-family: unset;
+		border-color: white;
+		border-bottom-color: red;
+		border-bottom-width: 2px;
+		border-bottom-style: double;
+	}
 	
 	h1:firstoftype {
 		text-align: center;
@@ -15,35 +24,28 @@
   </head>
 
   <body>
-    <h1>ORS 1, VOA - dev</h1>
+    <h1>ORS 1, VOA - dev</h1><div>Not for commercial or private use.</div>
 	<hr>
     <form id="import-form" method="post">
 	<div id="import-form-title">
-	  <h1>Welcome to the "simple
-<select id="import-type" name="collection-name" size="1" style="
-			font-size: 1em;
-			font-weight: bold;
-			font-family: unset;
-			border-color: white;
-			border-bottom-color: red;
-			border-bottom-width: 2px;
-			border-bottom-style: double;
-			">
+	<h1>Welcome to the "simple
+	<select id="import-type" name="collection-name" size="1">
 			<option value="o">object</option>
 			<option value="v">value</option>
 			<option value="a">attribute</option>
-		</select>
-	  import system".</h1>
+	</select>
+	import system".</h1>
 	</div>
 	  <hr>
       <label for="object-name">Object Name:</label>
       <input type="text" name="name" id="object-name">
 	  <br>
-	  <button id="add-attribute" onclick="addAttribute()">add attribute</button>
+	  <button id="add-attribute" onclick="addAttribute()">Attribute +</button>
 	  <br>
 	  <br>
-      <button type="submit">Create object</button>
-	  <button type="submit">Create object +</button>
+      <button type="submit">Import</button>
+	  <!--button type="submit">Create and derive more</button>-->
+	  
 	  <!-- allow user to specify o's a's and v's 
 		   + will make a popup asking other 2 available type
 		   a and v in the case of this form being for o's

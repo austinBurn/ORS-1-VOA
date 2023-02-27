@@ -107,8 +107,69 @@ function create_v(creationTime = new Date().getTime(),
 	//return the id of the v
 }
 
-function create_o(creationTime, attributes) {
+/* chatgpt garbage
+async function create_v(creationTime, belongsTo_o, belongsTo_a, v_isType_o, v) {
+  // Validate that o and a exist, and create them if they do not
+  const oCollection = voa_db.collection('o');
+  const aCollection = voa_db.collection('a');
+  let o = await oCollection.firstExample({ _id: belongsTo_o });
+  let a = await aCollection.firstExample({ _id: belongsTo_a });
+  if (!o) {
+    o = await oCollection.save({ type: 'o' });
+    await oCollection.createEdge('o_has_a', o._id, a._id);
+  }
+  if (!a) {
+    a = await aCollection.save({ type: 'a', name: 'default' });
+    await oCollection.createEdge('o_has_a', o._id, a._id);
+  }
+  
+  // Ensure v type exists as an O
+  // Note: This part is unclear, so I will assume v_isType_o is the ID of an existing O
+  const v_isType_o_doc = await oCollection.firstExample({ _id: v_isType_o });
+  if (!v_isType_o_doc) {
+    throw new Error(`Could not find O with ID ${v_isType_o}`);
+  }
 
+  // Add the v to the o
+  const vCollection = voa_db.collection('v');
+  const vDoc = { ...v, type: 'v', dateCreated: creationTime, dateModified: creationTime };
+  const v_id = await vCollection.save(vDoc)._id;
+  await oCollection.createEdge('o_has_v', o._id, v_id);
+  await aCollection.createEdge('a_hasA_v', a._id, v_id);
+  
+  // Make v_isType_o edge, v_belongsTo_a edge, and v_belongsTo_o edge
+  await vCollection.createEdge('v_isType_o', v_id, v_isType_o_doc._id);
+  await vCollection.createEdge('v_belongsTo_a', v_id, a._id);
+  await vCollection.createEdge('v_belongsTo_o', v_id, o._id);
+  
+  // Check if o_has_v has been created, if not, create it
+  const o_has_v = await voa_db.edgeCollection('o_has_v');
+  const existing_o_has_v_edge = await o_has_v.firstExample({ _from: o._id, _to: v_id });
+  if (!existing_o_has_v_edge) {
+    await o_has_v.save(o._id, v_id);
+  }
+  
+  // Check if a_hasA_v has been created, if not, create it
+  const a_hasA_v = await voa_db.edgeCollection('a_hasA_v');
+  const existing_a_hasA_v_edge = await a_hasA_v.firstExample({ _from: a._id, _to: v_id });
+  if (!existing_a_hasA_v_edge) {
+    await a_hasA_v.save(a._id, v_id);
+  }
+  
+  // Return the ID of the v
+  return v_id;
+}
+*/
+
+function create_o(creationTime, attributes) {
+	
+	//check for similar objects in the db
+	
+	//look for values matching attributes 
+	//if any have over 3 matching attribute:value pairs in addition to the same "object type" attribute:value,
+	//return the ID's and ask the user if that's what they meant to make
+
+	
 	//atributes in an array?
 	//for av in attribs
 	//{
@@ -122,3 +183,8 @@ function create_a(creationTime, attributeName, type = "o/stringtypeobj?") {
 	//if no ids are returned, create a new a, v, o style  object for the attributes
 
 }
+
+
+//function create data converters a(v)_to_a(v)
+//user created js functions?
+//approval process

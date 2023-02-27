@@ -1,0 +1,11 @@
+I have a an ArangoDB graph with the following Document collections:
+a - represents all possible object attributes.
+o - represents any possible object/"thing" - abstract.
+v - contains all values for every object's every attribute.
+
+They are linked together using 5 primary Edge collections:
+a_hasName_v - a link to the name of the attribute. Always in lower case letters. Multilink for synonym.
+o_has_v - (a) link(s) to an objects attribute values.
+v_belongsTo_a - a link to the associated attribute.
+v_belongsTo_o - a link to the associated object.
+v_isType_o - a link to the type of data. Will be used for processing later.
